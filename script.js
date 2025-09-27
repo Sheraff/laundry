@@ -157,11 +157,9 @@ async function autoFillOutsideWeather() {
 		fields.windSpeed.value = windSpeed.toFixed(1)
 		fields.sunshine.value = sunshine.toFixed(1)
 
-		console.log('Auto-filled with:', { temperature, humidity, windSpeed, sunshine })
-
 		onOutsideFieldsetChange()
 	} catch (e) {
-		console.error('Failed to fetch weather data', e)
+		console.error(new Error('Failed to fetch weather data', { cause: e }))
 	}
 }
 
@@ -177,8 +175,9 @@ async function getLocation() {
 	return new Promise((resolve) => {
 		navigator.geolocation.getCurrentPosition(
 			({ coords }) => resolve(coords),
-			() => {
+			(e) => {
 				alert('Unable to retrieve your location')
+				console.error(new Error('Geolocation error', { cause: e }))
 				resolve(null)
 			}
 		)

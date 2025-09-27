@@ -30,6 +30,7 @@
 			<hr />
 			<output id="outsideResult" for="outsideTemp outsideHumidity outsideWind sunshine">0</output>
 		</fieldset>
+
 		<fieldset id="inside">
 			<legend>Inside</legend>
 			<label for="insideTemp">Inside temperature (°C)</label>
@@ -40,12 +41,156 @@
 			<hr />
 			<output id="insideResult" for="insideTemp insideHumidity insideWind">0</output>
 		</fieldset>
+
 		<fieldset id="result">
 			<legend>Result</legend>
 			<output id="output"
 				for="outsideTemp outsideHumidity outsideWind sunshine insideTemp insideHumidity">🤷</output>
 		</fieldset>
+
+		<fieldset id="explanation">
+			<legend>Explanation</legend>
+			<p>The evaporation rate <math>
+					<mi>E</mi>
+				</math> (kg/m²/s) is computed as follows:</p>
+			<math display="block">
+				<mi>T</mi>
+				<mo>=</mo>
+				<ms>Temperature (°C)</ms>
+			</math>
+			<math display="block">
+				<mi>𝒱</mi>
+				<mo>=</mo>
+				<ms>Wind speed (m/s)</ms>
+			</math>
+			<math display="block">
+				<mi>H</mi>
+				<mo>=</mo>
+				<ms>Relative Humidity (%)</ms>
+			</math>
+			<math display="block">
+				<mi>𝑅</mi>
+				<mo>=</mo>
+				<ms>Solar radiation (W/m²)</ms>
+			</math>
+			<math display="block">
+				<mi>λ</mi>
+				<mo>=</mo>
+				<ms>Latent heat of vaporization of water (J/kg)</ms>
+				<mo>≈</mo>
+				<mn>2.45</mn>
+				<msup>
+					<mi>e</mi>
+					<mn>6</mn>
+				</msup>
+			</math>
+			<math display="block">
+				<mi>k</mi>
+				<mo>=</mo>
+				<ms>Empirical constant</ms>
+				<mo>≈</mo>
+				<mn>0.00023</mn>
+			</math>
+			<math display="block">
+				<mi>a</mi>
+				<mo>=</mo>
+				<ms>Empirical coefficient for wind effect</ms>
+				<mo>≈</mo>
+				<mn>0.5</mn>
+			</math>
+			<math display="block">
+				<msub>
+					<mi>e</mi>
+					<mi>s</mi>
+				</msub>
+				<mo>=</mo>
+				<ms>Saturation vapor pressure at temperature T (kPa)</ms>
+			</math>
+			<math display="block">
+				<msub>
+					<mi>e</mi>
+					<mi>a</mi>
+				</msub>
+				<mo>=</mo>
+				<ms>Actual vapor pressure (kPa)</ms>
+			</math>
+			<hr />
+			<math display="block">
+				<msub>
+					<mi>e</mi>
+					<mi>s</mi>
+				</msub>
+				<mo>=</mo>
+				<mn>0.6108</mn>
+				<mo>.</mo>
+				<msup>
+					<mi>e</mi>
+					<math>
+						<mfrac>
+							<mrow>
+								<mn>17.27</mn>
+								<mo>.</mo>
+								<mi>T</mi>
+							</mrow>
+							<mrow>
+								<mi>T</mi>
+								<mo>+</mo>
+								<mn>237.3</mn>
+							</mrow>
+						</mfrac>
+					</math>
+				</msup>
+			</math>
+			<math display="block">
+				<msub>
+					<mi>e</mi>
+					<mi>a</mi>
+				</msub>
+				<mo>=</mo>
+				<mfrac>
+					<mi>H</mi>
+					<mn>100</mn>
+				</mfrac>
+				<mo>.</mo>
+				<msub>
+					<mi>e</mi>
+					<mi>s</mi>
+				</msub>
+			</math>
+			<math display="block">
+				<mi>E</mi>
+				<mo>=</mo>
+				<math>
+					<mi>k</mi>
+					<mo>.</mo>
+					<mo>(</mo>
+					<msub>
+						<mi>e</mi>
+						<mi>s</mi>
+					</msub>
+					<mo>−</mo>
+					<msub>
+						<mi>e</mi>
+						<mi>a</mi>
+					</msub>
+					<mo>)</mo>
+					<mo>.</mo>
+					<mo>(</mo>
+					<mn>1</mn>
+					<mo>+</mo>
+					<mi>a</mi>
+					<mi>𝒱</mi>
+					<mo>)</mo>
+				</math>
+				<mo>+</mo>
+				<mfrac>
+					<mi>R</mi>
+					<mi>λ</mi>
+				</mfrac>
+			</math>
+		</fieldset>
 	</form>
+
 </body>
 
 </html>

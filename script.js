@@ -123,6 +123,43 @@ async function autoFillOutsideWeather() {
 	const coords = await getLocation()
 	if (!coords) return
 
+	const data = await getWeatherData(coords)
+	if (!data) return
+
+	try {
+		const temperature = average(data.hourly.temperature_2m, 3) // °C
+		const humidity = average(data.hourly.relative_humidity_2m, 3) // %
+		const windSpeedKmh = average(data.hourly.wind_speed_10m, 3) // km/h
+		const sunshine = average(data.hourly.direct_normal_irradiance, 3) // W/m²
+
+		const windSpeed = windSpeedKmh / 3.6 // m/s
+
+		const fields = getOutsideFields()
+		fields.temperature.value = temperature.toFixed(1)
+		fields.humidity.value = humidity.toFixed(1)
+		fields.windSpeed.value = windSpeed.toFixed(1)
+		fields.sunshine.value = sunshine.toFixed(1)
+	} catch (e) {
+		alert('Failed to parse weather data')
+		console.error(new Error('Failed to parse weather data', { cause: e }))
+		return
+	}
+
+	onOutsideFieldsetChange()
+}
+
+if (navigator.permissions) {
+	navigator.permissions.query({ name: "geolocation" }).then(r => {
+		if (r.state === 'granted') {
+			autoFillOutsideWeather()
+		}
+	})
+}
+
+/**
+ * @param {GeolocationCoordinates} coords
+ */
+async function getWeatherData(coords) {
 	const url = new URL('https://api.open-meteo.com/v1/forecast')
 	url.searchParams.set('latitude', coords.latitude.toString())
 	url.searchParams.set('longitude', coords.longitude.toString())
@@ -143,23 +180,11 @@ async function autoFillOutsideWeather() {
 	try {
 		const response = await fetch(url)
 		const data = await response.json()
-
-		const temperature = average(data.hourly.temperature_2m, 3) // °C
-		const humidity = average(data.hourly.relative_humidity_2m, 3) // %
-		const windSpeedKmh = average(data.hourly.wind_speed_10m, 3) // km/h
-		const sunshine = average(data.hourly.direct_normal_irradiance, 3) // W/m²
-
-		const windSpeed = windSpeedKmh / 3.6 // m/s
-
-		const fields = getOutsideFields()
-		fields.temperature.value = temperature.toFixed(1)
-		fields.humidity.value = humidity.toFixed(1)
-		fields.windSpeed.value = windSpeed.toFixed(1)
-		fields.sunshine.value = sunshine.toFixed(1)
-
-		onOutsideFieldsetChange()
+		return data
 	} catch (e) {
+		alert('Failed to fetch weather data')
 		console.error(new Error('Failed to fetch weather data', { cause: e }))
+		return null
 	}
 }
 

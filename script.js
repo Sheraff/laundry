@@ -63,10 +63,10 @@ function getInsideFields() {
 
 function updateOutputs() {
 	const outsideOutput = /** @type {MathMLElement} */ (document.getElementById('outsideResult'))
-	outsideOutput.innerHTML = outsideEvaporationRate.toFixed(5)
+	outsideOutput.innerHTML = (outsideEvaporationRate * 10_000).toFixed(5)
 
 	const insideOutput = /** @type {MathMLElement} */ (document.getElementById('insideResult'))
-	insideOutput.innerHTML = insideEvaporationRate.toFixed(5)
+	insideOutput.innerHTML = (insideEvaporationRate * 10_000).toFixed(5)
 
 	const output = /** @type {HTMLOutputElement} */ (document.getElementById('output'))
 

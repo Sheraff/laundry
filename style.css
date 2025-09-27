@@ -6,3 +6,20 @@ math {
 math+hr {
 	margin: 1em 0;
 }
+
+fieldset {
+	margin-top: 2em;
+	padding: 1em;
+}
+
+fieldset#outside,
+fieldset#inside {
+	display: grid;
+	grid-template-columns: auto 1fr auto;
+	gap: 1em;
+
+	button,
+	output {
+		grid-column: 1 / -1;
+	}
+}

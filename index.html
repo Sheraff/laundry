@@ -15,31 +15,60 @@
 		<fieldset id="outside">
 			<legend>Outside</legend>
 			<button type="button" id="fetchWeather">Auto-fill</button>
-			<hr />
 			<label for="outsideTemp">Outside temperature (°C)</label>
 			<input type="number" id="outsideTemp" placeholder="Temperature (°C)" required />
-			<hr />
+			<math>
+				<mi>T</mi>
+			</math>
 			<label for="outsideHumidity">Outside humidity (%)</label>
 			<input type="number" id="outsideHumidity" placeholder="Humidity (%)" min="0" max="100" />
-			<hr />
+			<math>
+				<mi>H</mi>
+			</math>
 			<label for="outsideWind">Outside wind speed (m/s)</label>
 			<input type="number" id="outsideWind" placeholder="Wind speed (m/s)" />
-			<hr />
+			<math>
+				<mi>𝒱</mi>
+			</math>
 			<label for="outsideSunshine">Sunshine (W/m²)</label>
 			<input type="number" id="outsideSunshine" placeholder="Sunshine (W/m²)" />
-			<hr />
-			<output id="outsideResult" for="outsideTemp outsideHumidity outsideWind sunshine">0</output>
+			<math>
+				<mi>𝑅</mi>
+			</math>
+			<output for="outsideTemp outsideHumidity outsideWind sunshine">
+				<math>
+					<msub>
+						<mi>E</mi>
+						<mi>outside</mi>
+					</msub>
+					<mo>=</mo>
+					<mn id="outsideResult">0</mn>
+				</math>
+			</output>
 		</fieldset>
 
 		<fieldset id="inside">
 			<legend>Inside</legend>
 			<label for="insideTemp">Inside temperature (°C)</label>
 			<input type="number" id="insideTemp" placeholder="Temperature (°C)" required />
-			<hr />
+			<math>
+				<mi>T</mi>
+			</math>
 			<label for="insideHumidity">Inside humidity (%)</label>
 			<input type="number" id="insideHumidity" placeholder="Humidity (%)" min="0" max="100" />
-			<hr />
-			<output id="insideResult" for="insideTemp insideHumidity insideWind">0</output>
+			<math>
+				<mi>H</mi>
+			</math>
+			<output for="insideTemp insideHumidity insideWind">
+				<math>
+					<msub>
+						<mi>E</mi>
+						<mi>inside</mi>
+					</msub>
+					<mo>=</mo>
+					<mn id="insideResult">0</mn>
+				</math>
+			</output>
 		</fieldset>
 
 		<fieldset id="result">
@@ -50,23 +79,26 @@
 
 		<fieldset id="explanation">
 			<legend>Explanation</legend>
-			<p>The evaporation rate <math>
-					<mi>E</mi>
-				</math> (kg/m²/s) is computed as follows:</p>
+			<math display="block">
+				<mtext>
+					The evaporation rate E
+					(kg/m²/s) is computed as follows:
+				</mtext>
+			</math>
 			<math display="block">
 				<mi>T</mi>
 				<mo>=</mo>
 				<ms>Temperature (°C)</ms>
 			</math>
 			<math display="block">
-				<mi>𝒱</mi>
-				<mo>=</mo>
-				<ms>Wind speed (m/s)</ms>
-			</math>
-			<math display="block">
 				<mi>H</mi>
 				<mo>=</mo>
 				<ms>Relative Humidity (%)</ms>
+			</math>
+			<math display="block">
+				<mi>𝒱</mi>
+				<mo>=</mo>
+				<ms>Wind speed (m/s)</ms>
 			</math>
 			<math display="block">
 				<mi>𝑅</mi>

@@ -56,27 +56,27 @@ function getInsideFields() {
 }
 
 function updateOutputs() {
-	const outsideOutput = /** @type {HTMLOutputElement} */ (document.getElementById('outsideResult'))
-	outsideOutput.value = outsideEvaporationRate.toFixed(5)
+	const outsideOutput = /** @type {MathMLElement} */ (document.getElementById('outsideResult'))
+	outsideOutput.innerHTML = outsideEvaporationRate.toFixed(5)
 
-	const insideOutput = /** @type {HTMLOutputElement} */ (document.getElementById('insideResult'))
-	insideOutput.value = insideEvaporationRate.toFixed(5)
+	const insideOutput = /** @type {MathMLElement} */ (document.getElementById('insideResult'))
+	insideOutput.innerHTML = insideEvaporationRate.toFixed(5)
 
 	const output = /** @type {HTMLOutputElement} */ (document.getElementById('output'))
 
 	if (insideEvaporationRate === 0 || outsideEvaporationRate === 0) {
-		output.value = '🤷'
+		output.innerHTML = '🤷'
 		return
 	}
 
 	const ratio = outsideEvaporationRate / insideEvaporationRate
 	const ALLOWED_DELTA = 0.2
 	if (ratio > 1 + ALLOWED_DELTA) {
-		output.value = `☀️ Outside is ${(ratio).toFixed(2)}x better`
+		output.innerHTML = `☀️ Outside is ${(ratio).toFixed(2)}x better`
 	} else if (ratio < 1 - ALLOWED_DELTA) {
-		output.value = `🏠 Inside is ${(1 / ratio).toFixed(2)}x better`
+		output.innerHTML = `🏠 Inside is ${(1 / ratio).toFixed(2)}x better`
 	} else {
-		output.value = '🤷 Both are equally good'
+		output.innerHTML = '🤷 Both are equally good'
 	}
 }
 

@@ -141,10 +141,11 @@ async function autoFillOutsideWeather() {
 	}
 
 	try {
-		const temperature = average(data.hourly.temperature_2m, 3) // °C
-		const humidity = average(data.hourly.relative_humidity_2m, 3) // %
-		const windSpeedKmh = average(data.hourly.wind_speed_10m, 3) // km/h
-		const sunshine = average(data.hourly.direct_normal_irradiance, 3) // W/m²
+		const hour = new Date().getHours()
+		const temperature = average(data.hourly.temperature_2m, hour, 3) // °C
+		const humidity = average(data.hourly.relative_humidity_2m, hour, 3) // %
+		const windSpeedKmh = average(data.hourly.wind_speed_10m, hour, 3) // km/h
+		const sunshine = average(data.hourly.direct_normal_irradiance, hour, 3) // W/m²
 
 		const windSpeed = windSpeedKmh / 3.6 // m/s
 
@@ -198,9 +199,9 @@ async function getWeatherData(coords) {
 	const stats = [
 		'temperature_2m',
 		'relative_humidity_2m',
-		'precipitation',
+		// 'precipitation',
 		'wind_speed_10m',
-		'precipitation_probability',
+		// 'precipitation_probability',
 		'direct_normal_irradiance',
 		// 'global_tilted_irradiance',
 	]
@@ -249,16 +250,19 @@ async function getLocation() {
 
 /**
  * @param {number[]} values
+ * @param {number} from
  * @param {number} length
  * @returns {number} average of the values
  */
-function average(values, length) {
+function average(values, from, length) {
 	let sum = 0
-	const min = Math.min(values.length, length)
-	for (let i = 0; i < min; i++) {
+	let count = 0
+	const min = Math.min(values.length, from + length)
+	for (let i = from; i < min; i++) {
+		count++
 		sum += values[i]
 	}
-	return sum / min
+	return sum / count
 }
 
 /**

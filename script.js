@@ -11,6 +11,7 @@ const insideFieldset = /** @type {HTMLFieldSetElement} */ (document.getElementBy
 
 let insideEvaporationRate = 0
 let outsideEvaporationRate = 0
+let rainProbability = 0
 
 outsideFieldset.addEventListener('input', onOutsideFieldsetChange)
 insideFieldset.addEventListener('input', onInsideFieldsetChange)
@@ -72,7 +73,11 @@ function updateOutputs() {
 	const ratio = outsideEvaporationRate / insideEvaporationRate
 	const ALLOWED_DELTA = 0.2
 	if (ratio > 1 + ALLOWED_DELTA) {
-		output.innerHTML = `☀️ Outside is ${(ratio).toFixed(2)}x better`
+		if (rainProbability > 2) {
+			output.innerHTML = `🌦️ Outside is ${(ratio).toFixed(2)}x better, but there's a ${Math.round(rainProbability)}% chance of rain`
+		} else {
+			output.innerHTML = `☀️ Outside is ${(ratio).toFixed(2)}x better`
+		}
 	} else if (ratio < 1 - ALLOWED_DELTA) {
 		output.innerHTML = `🏠 Inside is ${(1 / ratio).toFixed(2)}x better`
 	} else {
@@ -120,6 +125,7 @@ function vaporPressure(temperature, humidity) {
 }
 
 async function autoFillOutsideWeather() {
+	rainProbability = 0
 	const fetchStateOutput = /** @type {HTMLOutputElement} */ (document.getElementById('fetchState'))
 	if (fetchStateOutput) fetchStateOutput.value = '⏳'
 
@@ -146,8 +152,11 @@ async function autoFillOutsideWeather() {
 		const humidity = average(data.hourly.relative_humidity_2m, hour, 3) // %
 		const windSpeedKmh = average(data.hourly.wind_speed_10m, hour, 3) // km/h
 		const sunshine = average(data.hourly.direct_normal_irradiance, hour, 3) // W/m²
+		const rain = average(data.hourly.precipitation_probability, hour, 3) // %
 
 		const windSpeed = windSpeedKmh / 3.6 // m/s
+
+		rainProbability = rain
 
 		const fields = getOutsideFields()
 		fields.temperature.value = temperature.toFixed(1)
@@ -201,7 +210,7 @@ async function getWeatherData(coords) {
 		'relative_humidity_2m',
 		// 'precipitation',
 		'wind_speed_10m',
-		// 'precipitation_probability',
+		'precipitation_probability',
 		'direct_normal_irradiance',
 		// 'global_tilted_irradiance',
 	]

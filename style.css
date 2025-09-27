@@ -32,6 +32,10 @@ input {
 	border-radius: 4px;
 }
 
+hr {
+	border-width: 1px 0 0 0;
+}
+
 math {
 	width: fit-content;
 	margin: 0.5em 0;
@@ -39,6 +43,10 @@ math {
 
 math+hr {
 	margin: 1em 0;
+}
+
+#explanation math {
+	font-size: 14px;
 }
 
 fieldset {

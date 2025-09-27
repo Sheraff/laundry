@@ -15,25 +15,36 @@
 		<fieldset id="outside">
 			<legend>Outside</legend>
 			<button type="button" id="fetchWeather">Auto-fill</button>
+			<hr />
 			<label for="outsideTemp">Outside temperature (°C)</label>
 			<input type="number" id="outsideTemp" placeholder="Temperature (°C)" required />
+			<hr />
 			<label for="outsideHumidity">Outside humidity (%)</label>
 			<input type="number" id="outsideHumidity" placeholder="Humidity (%)" min="0" max="100" />
+			<hr />
 			<label for="outsideWind">Outside wind speed (m/s)</label>
 			<input type="number" id="outsideWind" placeholder="Wind speed (m/s)" />
+			<hr />
 			<label for="outsideSunshine">Sunshine (W/m²)</label>
 			<input type="number" id="outsideSunshine" placeholder="Sunshine (W/m²)" />
+			<hr />
 			<output id="outsideResult" for="outsideTemp outsideHumidity outsideWind sunshine">0</output>
 		</fieldset>
 		<fieldset id="inside">
 			<legend>Inside</legend>
 			<label for="insideTemp">Inside temperature (°C)</label>
 			<input type="number" id="insideTemp" placeholder="Temperature (°C)" required />
+			<hr />
 			<label for="insideHumidity">Inside humidity (%)</label>
 			<input type="number" id="insideHumidity" placeholder="Humidity (%)" min="0" max="100" />
+			<hr />
 			<output id="insideResult" for="insideTemp insideHumidity insideWind">0</output>
 		</fieldset>
-		<output id="output" for="outsideTemp outsideHumidity outsideWind sunshine insideTemp insideHumidity"></output>
+		<fieldset id="result">
+			<legend>Result</legend>
+			<output id="output"
+				for="outsideTemp outsideHumidity outsideWind sunshine insideTemp insideHumidity">🤷</output>
+		</fieldset>
 	</form>
 </body>
 

@@ -1,7 +1,13 @@
-const ASSUMED_INSIDE_WIND_SPEED = 0.2 // m/s
-const WIND_EFFECT_FACTOR = 0.5 // ~0.5 - 1.5 empirical factor to account for wind effect on evaporation
-const K = 0.00023 // empirical constant to convert to kg/m²/s
-const LATENT_HEAT_VAPORIZATION = 2.45e6 // J/kg
+/** m/s */
+const ASSUMED_INSIDE_WIND_SPEED = 0.2
+/** ~0.5 - 1.5 empirical factor to account for wind effect on evaporation */
+const WIND_EFFECT_FACTOR = 0.5
+/** empirical constant to convert to kg/(m²·s·kPa) */
+const K = 0.00023
+/** J/kg */
+const LATENT_HEAT_VAPORIZATION = 2.45e6
+/** 0-1 */
+const SOLAR_EFFICIENCY = 0.15
 
 const autoFillButton = /** @type {HTMLButtonElement} */ (document.getElementById('fetchWeather'))
 autoFillButton.addEventListener('click', autoFillOutsideWeather)
@@ -41,7 +47,7 @@ function getOutsideFields() {
 function onInsideFieldsetChange() {
 	const fields = getInsideFields()
 	const temperature = fields.temperature.value ? parseFloat(fields.temperature.value) : 0
-	const humidity = fields.humidity.value ? parseFloat(fields.humidity.value) : 0
+	const humidity = fields.humidity.value ? parseFloat(fields.humidity.value) : 0 // 0 - 100
 
 	const evaporationRate = computeEvaporationRate({ temperature, humidity })
 	insideEvaporationRate = evaporationRate
@@ -52,8 +58,7 @@ function onInsideFieldsetChange() {
 function getInsideFields() {
 	const temperature = /** @type {HTMLInputElement} */ (insideFieldset.elements.namedItem('insideTemp'))
 	const humidity = /** @type {HTMLInputElement} */ (insideFieldset.elements.namedItem('insideHumidity'))
-	const windSpeed = /** @type {HTMLInputElement} */ (insideFieldset.elements.namedItem('insideWind'))
-	return { temperature, humidity, windSpeed }
+	return { temperature, humidity }
 }
 
 function updateOutputs() {
@@ -73,7 +78,7 @@ function updateOutputs() {
 	const ratio = outsideEvaporationRate / insideEvaporationRate
 	const ALLOWED_DELTA = 0.2
 	if (ratio > 1 + ALLOWED_DELTA) {
-		if (rainProbability > 2) {
+		if (rainProbability > 10) {
 			output.innerHTML = `🌦️ Outside is ${(ratio).toFixed(2)}x better, but there's a ${Math.round(rainProbability)}% chance of rain`
 		} else {
 			output.innerHTML = `☀️ Outside is ${(ratio).toFixed(2)}x better`
@@ -86,6 +91,9 @@ function updateOutputs() {
 }
 
 /**
+ * This is the simplified evaporation rate model.
+ * To be more accurate, we could use the Penman-Monteith equation,
+ * but it's kind of for plants.
  * @param {Object} params
  * @param {number} params.temperature in °C
  * @param {number} params.humidity in %
@@ -102,7 +110,7 @@ function computeEvaporationRate({
 	const es = saturationVaporPressure(temperature)
 	const ea = vaporPressure(temperature, humidity)
 
-	return K * (es - ea) * (1 + WIND_EFFECT_FACTOR * windSpeed) + sunshine / LATENT_HEAT_VAPORIZATION
+	return K * (es - ea) * (1 + WIND_EFFECT_FACTOR * windSpeed) + sunshine / LATENT_HEAT_VAPORIZATION * SOLAR_EFFICIENCY
 }
 
 /**

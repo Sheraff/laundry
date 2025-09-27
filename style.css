@@ -23,3 +23,37 @@ fieldset#inside {
 		grid-column: 1 / -1;
 	}
 }
+
+output+output {
+	margin-top: 1em;
+}
+
+#coordinates,
+#address {
+	display: block;
+	opacity: 0.5;
+
+	&:empty {
+		display: none;
+	}
+}
+
+#coordinates:not(:empty) {
+	&::before {
+		content: '(';
+	}
+
+	&::after {
+		content: ')';
+	}
+}
+
+#fetchState {
+	&:empty {
+		display: none;
+	}
+
+	&::before {
+		content: ' ';
+	}
+}

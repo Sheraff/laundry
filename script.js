@@ -120,11 +120,25 @@ function vaporPressure(temperature, humidity) {
 }
 
 async function autoFillOutsideWeather() {
+	const fetchStateOutput = /** @type {HTMLOutputElement} */ (document.getElementById('fetchState'))
+	if (fetchStateOutput) fetchStateOutput.value = '⏳'
+
 	const coords = await getLocation()
-	if (!coords) return
+	if (!coords) {
+		if (fetchStateOutput) fetchStateOutput.value = '❌'
+		return
+	}
+
+	reverseGeocode(coords).then(address => {
+		const addressOutput = /** @type {HTMLOutputElement} */ (document.getElementById('address'))
+		if (addressOutput) addressOutput.value = address ?? ''
+	})
 
 	const data = await getWeatherData(coords)
-	if (!data) return
+	if (!data) {
+		if (fetchStateOutput) fetchStateOutput.value = '❌'
+		return
+	}
 
 	try {
 		const temperature = average(data.hourly.temperature_2m, 3) // °C
@@ -142,10 +156,28 @@ async function autoFillOutsideWeather() {
 	} catch (e) {
 		alert('Failed to parse weather data')
 		console.error(new Error('Failed to parse weather data', { cause: e }))
+		if (fetchStateOutput) fetchStateOutput.value = '❌'
 		return
 	}
 
+	if (fetchStateOutput) fetchStateOutput.value = '✅'
 	onOutsideFieldsetChange()
+}
+
+/**
+ * @param {GeolocationCoordinates} coords
+ * @returns {Promise<string | null>} address
+ */
+function reverseGeocode(coords) {
+	const url = new URL('https://nominatim.openstreetmap.org/reverse')
+	url.searchParams.set('lat', coords.latitude.toString())
+	url.searchParams.set('lon', coords.longitude.toString())
+	url.searchParams.set('format', 'json')
+
+	return fetch(url)
+		.then(response => response.json())
+		.then(data => data.display_name)
+		.catch(() => null)
 }
 
 if (navigator.permissions) {
@@ -192,15 +224,21 @@ async function getWeatherData(coords) {
  * @returns {Promise<GeolocationCoordinates|null>}
  */
 async function getLocation() {
+	const coordinatesOutput = /** @type {HTMLOutputElement} */ (document.getElementById('coordinates'))
 	if (!navigator.geolocation) {
 		alert('Geolocation is not supported by your browser')
+		if (coordinatesOutput) coordinatesOutput.value = ''
 		return null
 	}
 
 	return new Promise((resolve) => {
 		navigator.geolocation.getCurrentPosition(
-			({ coords }) => resolve(coords),
+			({ coords }) => {
+				if (coordinatesOutput) coordinatesOutput.value = `lat: ${formatCoord(coords.latitude)}, long: ${formatCoord(coords.longitude)}`
+				resolve(coords)
+			},
 			(e) => {
+				if (coordinatesOutput) coordinatesOutput.value = ''
 				alert('Unable to retrieve your location')
 				console.error(new Error('Geolocation error', { cause: e }))
 				resolve(null)
@@ -221,4 +259,15 @@ function average(values, length) {
 		sum += values[i]
 	}
 	return sum / min
+}
+
+/**
+ * @param {number} coord
+ */
+function formatCoord(coord) {
+	const deg = Math.floor(coord)
+	const minFloat = Math.abs((coord - deg) * 60)
+	const min = Math.floor(minFloat)
+	const sec = Math.floor((minFloat - min) * 60)
+	return `${deg}°${min}'${sec}"`
 }

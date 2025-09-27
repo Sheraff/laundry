@@ -11,10 +11,13 @@
 
 <body>
 	<h1>Where to dry my laundry</h1>
+	<output id="address" for="fetchWeather"></output>
+	<output id="coordinates" for="fetchWeather"></output>
 	<form>
 		<fieldset id="outside">
 			<legend>Outside</legend>
-			<button type="button" id="fetchWeather">Auto-fill</button>
+			<button type="button" id="fetchWeather">Auto-fill <output id="fetchState"
+					for="fetchWeather"></output></button>
 			<label for="outsideTemp">Outside temperature (°C)</label>
 			<input type="number" id="outsideTemp" placeholder="Temperature (°C)" required />
 			<math>

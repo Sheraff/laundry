@@ -72,11 +72,11 @@ function updateOutputs() {
 	const ratio = outsideEvaporationRate / insideEvaporationRate
 	const ALLOWED_DELTA = 0.2
 	if (ratio > 1 + ALLOWED_DELTA) {
-		output.value = `Outside is ${(ratio).toFixed(2)}x better`
+		output.value = `☀️ Outside is ${(ratio).toFixed(2)}x better`
 	} else if (ratio < 1 - ALLOWED_DELTA) {
-		output.value = `Inside is ${(1 / ratio).toFixed(2)}x better`
+		output.value = `🏠 Inside is ${(1 / ratio).toFixed(2)}x better`
 	} else {
-		output.value = 'Both are equally good'
+		output.value = '🤷 Both are equally good'
 	}
 }
 
